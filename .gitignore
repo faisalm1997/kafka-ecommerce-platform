@@ -216,3 +216,6 @@ pipeline.log
 .project
 .classpath
 .settings/
+
+cp-kafka.tar
+cp-zookeeper.tar

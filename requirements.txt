@@ -11,3 +11,4 @@ streamlit
 pandas
 plotly
 python-dotenv
+faker

@@ -12,10 +12,10 @@ help:
 
 setup-kind:
 	@echo "Creating KIND cluster..."
-	kind create cluster --name kafka-cluster --config kind-config.yaml
+	kind create cluster --name kafka-cluster --config k8s/kind-config.yaml
 	@echo "Installing ingress controller..."
 	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-	kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
+	# # # kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=300s
 
 deploy-kafka:
 	@echo "Deploying Kafka..."

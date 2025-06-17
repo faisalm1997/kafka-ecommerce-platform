@@ -1,38 +1,36 @@
 from kafka import KafkaProducer
 import json
-from data_generator import EcommerceDataGenerator
-import time
 import logging
+from data_generator import EcommerceDataGenerator
+from config import KAFKA_CONFIG, TOPIC_NAME
 
-logging.basicConfig(level=logging.DEBUG)  # Set to DEBUG for more visibility
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Initialize data generator
-generator = EcommerceDataGenerator()
+def create_producer():
+    producer = KafkaProducer(
+        bootstrap_servers=KAFKA_CONFIG['bootstrap.servers'],
+        value_serializer=lambda x: json.dumps(x).encode('utf-8')
+    )
+    return producer
 
-producer = KafkaProducer(
-    bootstrap_servers=['my-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092'],
-    value_serializer=lambda x: json.dumps(x).encode('utf-8')
-)
+def main():
+    producer = create_producer()
+    data_generator = EcommerceDataGenerator()
 
-BATCH_SIZE = 100
-
-while True:
     try:
-        # Generate batch of orders
-        orders = generator.generate_batch(BATCH_SIZE)
-        
-        # Send each order to Kafka
-        for order in orders:
-            future = producer.send('ecommerce-orders', order)
-            # Wait for message to be sent
-            record_metadata = future.get(timeout=10)
-            logger.info(f"Sent order {order['order_id']} to partition {record_metadata.partition} at offset {record_metadata.offset}")
-        
-        producer.flush()
-        logger.info(f"Successfully sent batch of {BATCH_SIZE} orders")
-        time.sleep(5)
-        
+        while True:
+            event = data_generator.generate_event()
+            producer.send(TOPIC_NAME, value=event)
+            producer.flush()
+            logger.info(f"Sent event: {event}")
+    
     except Exception as e:
-        logger.error(f"Error producing messages: {str(e)}", exc_info=True)
-        time.sleep(1)
+        logger.error(f"Error producing messages: {str(e)}")
+    finally:
+        if producer:
+            producer.close()
+            logger.info("Producer closed successfully")
+
+if __name__ == "__main__":
+    main()

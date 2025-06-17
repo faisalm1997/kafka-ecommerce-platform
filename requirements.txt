@@ -1,6 +1,10 @@
-names
+kafka-python
+confluent-kafka
+avro-python3
+requests
 python-dotenv
+boto3
+pandas
+plotly
 pyspark
 streamlit
-pandas
-confluent-kafka

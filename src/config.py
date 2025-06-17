@@ -16,20 +16,15 @@ PRODUCT_CATEGORIES = [
 
 # Kafka Configuration
 KAFKA_CONFIG = {
-    'bootstrap.servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'broker:29092'),
+    'bootstrap.servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092'),
     'client.id': 'ecommerce-client',
     'security.protocol': 'PLAINTEXT'
 }
 
-# Schema Registry Configuration
-SCHEMA_REGISTRY_URL = os.getenv('SCHEMA_REGISTRY_URL', 'http://schema-registry:8081')
+# If running in Docker, override the bootstrap servers
+if os.getenv('DOCKER_ENV'):
+    KAFKA_CONFIG['bootstrap.servers'] = 'broker:29092'
 
 # Topics
-TOPIC_NAME = 'ecommerce-orders'
+TOPIC_NAME = 'ecommerce-events'
 BATCH_SIZE = 100
-
-# AWS Setup (if still needed)
-AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
-AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
-S3_BUCKET = "faisalm-real-time-data-platform-logs"

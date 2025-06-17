@@ -1,44 +1,46 @@
-from kafka import KafkaConsumer
+from confluent_kafka import Consumer
 import json
-import boto3
-from datetime import datetime
 import logging
-from config import KAFKA_CONFIG, TOPIC_NAME, S3_BUCKET
+from datetime import datetime
+from config import KAFKA_CONFIG, TOPIC_NAME
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def create_consumer(group_id):
-    consumer = KafkaConsumer(
-        TOPIC_NAME,
-        bootstrap_servers=KAFKA_CONFIG['bootstrap.servers'],
-        value_deserializer=lambda x: json.loads(x.decode('utf-8')),
-        group_id=group_id,
-        auto_offset_reset='earliest',
-        enable_auto_commit=True,
-        auto_commit_interval_ms=5000
-    )
-    logger.info(f"Connected to Kafka, assigned partitions: {consumer.assignment()}")
-    return consumer
+    conf = {
+        'bootstrap.servers': KAFKA_CONFIG['bootstrap.servers'],
+        'group.id': group_id,
+        'auto.offset.reset': 'earliest',
+        'enable.auto.commit': True
+    }
+    return Consumer(conf)
 
 def main():
-    group_id = 'ecommerce-group'
-    consumer = create_consumer(group_id)
+    consumer = create_consumer('ecommerce-group')
+    consumer.subscribe([TOPIC_NAME])
     
-    current_date = datetime.now().strftime('%Y-%m-%d')
-    daily_data = []
-
     try:
-        for message in consumer:
-            logger.info(f"Received message: {message.value}")
-            daily_data.append(message.value)
+        while True:
+            msg = consumer.poll(1.0)
             
-    except Exception as e:
-        logger.error(f"Fatal error: {str(e)}", exc_info=True)
+            if msg is None:
+                continue
+            if msg.error():
+                logger.error(f"Consumer error: {msg.error()}")
+                continue
+                
+            try:
+                value = json.loads(msg.value().decode('utf-8'))
+                logger.info(f"Received order: {value['order_id']}")
+            except Exception as e:
+                logger.error(f"Error processing message: {e}")
+                
+    except KeyboardInterrupt:
+        logger.info("Stopping consumer...")
     finally:
-        if consumer:
-            consumer.close()
-            logger.info("Consumer closed successfully")
+        consumer.close()
+        logger.info("Consumer closed successfully")
 
 if __name__ == "__main__":
     main()

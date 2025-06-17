@@ -1,5 +1,6 @@
 altair
 attrs
+avro-python3
 blinker
 boto3
 botocore
@@ -17,6 +18,7 @@ Jinja2
 jmespath
 jsonschema
 jsonschema-specifications
+kafka-python
 MarkupSafe
 names
 narwhals
@@ -30,7 +32,7 @@ protobuf
 py4j
 pyarrow
 pydeck
-pyspark
+pyspark==3.4.0
 python-dateutil
 python-dotenv
 pytz
@@ -44,7 +46,6 @@ streamlit
 tenacity
 toml
 tornado
-typing_extensions
 tzdata
 urllib3
 yarg

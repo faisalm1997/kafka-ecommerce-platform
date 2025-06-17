@@ -3,7 +3,7 @@ import logging
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
-from config import config
+from config import KAFKA_CONFIG, TOPIC_NAME
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 class EcommerceSparkProcessor:
     def __init__(self):
         self.spark = SparkSession.builder \
-            .appName(config.spark.app_name) \
-            .master(config.spark.master) \
+            .appName("EcommerceProcessor") \
+            .master("local[*]") \
             .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.0") \
             .getOrCreate()
         
@@ -48,12 +48,11 @@ class EcommerceSparkProcessor:
     def start_processing(self):
         logger.info("Starting Spark streaming processor...")
         
-        # Read from Kafka
         kafka_df = self.spark \
             .readStream \
             .format("kafka") \
-            .option("kafka.bootstrap.servers", config.kafka.bootstrap_servers) \
-            .option("subscribe", config.kafka.topic_name) \
+            .option("kafka.bootstrap.servers", "localhost:9092") \
+            .option("subscribe", TOPIC_NAME) \
             .option("startingOffsets", "latest") \
             .load()
         

@@ -219,3 +219,5 @@ pipeline.log
 
 cp-kafka.tar
 cp-zookeeper.tar
+
+venv/

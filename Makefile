@@ -14,7 +14,7 @@ logs:
 	docker-compose logs -f
 
 processor:
-	python src/processor.py
+	python src/spark_processor.py
 
 dashboard:
 	streamlit run src/dashboard.py

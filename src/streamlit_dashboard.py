@@ -11,7 +11,7 @@ import threading
 from collections import deque
 from config import config
 
-# Configure Streamlit page
+# Configure Streamlit 
 st.set_page_config(
     page_title="Ecommerce Analytics Dashboard",
     page_icon="📊",

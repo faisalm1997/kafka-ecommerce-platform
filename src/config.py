@@ -27,3 +27,12 @@ CONSUMER_TOPIC = os.getenv("CONSUMER_TOPIC", "ecommerce-data")
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
+
+KAFKA_CONFIG = {
+    'bootstrap.servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'broker:29092'),
+    'client.id': 'ecommerce-client',
+    'security.protocol': 'PLAINTEXT'
+}
+
+SCHEMA_REGISTRY_URL = os.getenv('SCHEMA_REGISTRY_URL', 'http://schema-registry:8081')
+TOPIC_NAME = 'ecommerce-orders'

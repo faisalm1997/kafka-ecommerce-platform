@@ -1,14 +1,6 @@
-kafka-python
-names
-python-dotenv
-kafka-python
 names
 python-dotenv
 pyspark
-py4j
-kafka-python
 streamlit
 pandas
-plotly
-python-dotenv
-faker
+confluent-kafka

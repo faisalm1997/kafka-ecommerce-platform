@@ -2,18 +2,21 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-# Install build dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
+    ca-certificates \
+    && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+# RUN python3 -m venv venv
 
-# Copy source code
+# RUN . venv/bin/activate
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
+
 COPY src/ /app/src/
+COPY src/config.py .
 
-# Command to run the producer
-CMD ["python", "src/kafka_producer.py"
+CMD ["python", "src/kafka_producer.py"]

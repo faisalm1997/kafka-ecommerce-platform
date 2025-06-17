@@ -2,8 +2,8 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-COPY requirements-dashboard.txt .
-RUN pip install -r requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
 
 COPY src/ ./src/
 COPY src/config.py .

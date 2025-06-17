@@ -1,33 +1,32 @@
 # Kafka Ecommerce Analytics Platform
 
-A comprehensive real-time ecommerce analytics platform built with Apache Kafka, running on Kubernetes (KIND) with automated deployment and CI/CD pipelines.
+A comprehensive real-time ecommerce analytics platform built with Confluent Kafka, running locally with Docker Compose.
 
 ## Architecture
 
-- **Kafka**: Message streaming platform
-- **Zookeeper**: Kafka coordination service
+- **Confluent Kafka**: Message streaming platform
+- **Schema Registry**: Schema management and evolution
 - **Producer**: Generates mock ecommerce events
 - **Consumer**: Processes individual events
 - **Spark Processor**: Real-time stream processing and analytics
 - **Dashboard**: Streamlit-based real-time visualization
-- **KIND**: Local Kubernetes development cluster
+- **Control Center**: Confluent's management interface
 
 ## Features
 
 - Real-time ecommerce event generation (orders, page views, cart actions)
 - Stream processing with Apache Spark
 - Interactive dashboard with live metrics
-- Automated deployment with Kubernetes
-- CI/CD pipeline with GitHub Actions
+- Schema management with Schema Registry
 - Docker containerization
 - Configuration management
+- Confluent Control Center monitoring
 
 ## Quick Start
 
 ### Prerequisites
-- Docker
-- KIND (Kubernetes in Docker)
-- kubectl
+- Docker Desktop for Mac
+- Docker Compose
 - Make
 
 ### Setup
@@ -38,159 +37,94 @@ A comprehensive real-time ecommerce analytics platform built with Apache Kafka, 
    cd kafka-ecommerce-platform
    ```
 
-2. **Run complete setup**
+2. **Start the platform**
    ```bash
-   make all
+   make up-build
    ```
 
 3. **Access services**
+   - Control Center: http://localhost:9021
    - Dashboard: http://localhost:8501
-   - Kafka: localhost:9092
+   - Schema Registry: http://localhost:8081
 
-### Manual Setup Steps
-
+### Component Status
 ```bash
-# Create KIND cluster
-make setup-kind
+# Check all services
+docker-compose ps
 
-# Deploy Kafka
-make deploy-kafka
-
-# Build and load Docker images
-make build-images
-
-# Deploy applications
-make deploy-apps
-
-# Setup port forwarding
-make port-forward
+# View logs
+make logs
 ```
 
 ## Components
 
 ### Data Generator
-Generates realistic ecommerce events:
-- Customer orders with products and pricing
-- Page view tracking
-- Shopping cart interactions
-- Configurable event rates
+- Generates realistic ecommerce events
+- Uses Avro schemas for data consistency
+- Configurable event rates and patterns
 
 ### Kafka Producer
 - Streams events to Kafka topics
+- Schema Registry integration
 - Configurable batch sizes and intervals
-- Proper partitioning by customer ID
 
 ### Kafka Consumer
-- Processes events in real-time
-- Scalable consumer groups
+- Real-time event processing
+- Schema-aware deserialization
 - Error handling and retry logic
 
 ### Spark Processor
-- Real-time stream processing
-- Windowed aggregations
-- Analytics calculations:
-  - Revenue by category
-  - Order counts and averages
-  - Customer activity by geography
+- Stream processing with structured streaming
+- Real-time analytics calculations
+- Integration with Kafka and Schema Registry
 
 ### Dashboard
-- Real-time metrics display
+- Real-time metrics visualization
 - Interactive charts and graphs
-- Configurable time windows
 - Auto-refresh capability
 
 ## Configuration
 
-### Environment Variables (.env)
+### Environment Variables
 ```bash
-KAFKA_BOOTSTRAP_SERVERS=kafka-service:9092
+KAFKA_BOOTSTRAP_SERVERS=broker:29092
+SCHEMA_REGISTRY_URL=http://schema-registry:8081
 KAFKA_TOPIC=ecommerce-events
-DATA_INTERVAL=1
-BATCH_SIZE=10
-DASHBOARD_REFRESH=5
 ```
-
-### Python Configuration (config.py)
-Centralized configuration management with:
-- Kafka settings
-- Spark configuration
-- Database connections
-- Application parameters
 
 ## Development
 
-### Local Development with Docker Compose
+### Local Development
 ```bash
-docker-compose up -d
+# Start all services
+make up
+
+# Rebuild and start
+make up-build
+
+# View logs
+make logs
+
+# Stop services
+make down
 ```
 
 ### Testing
 ```bash
-# Install test dependencies
-pip install pytest pytest-cov
-
 # Run tests
-pytest tests/ --cov=src/
+pytest tests/
 
 # Linting
 flake8 src/
 ```
 
-### Adding New Event Types
-1. Extend `EcommerceDataGenerator` class
-2. Update event processing in consumer
-3. Add Spark processing logic
-4. Update dashboard visualizations
-
-## Deployment
-
-### KIND (Local)
-```bash
-make all
-```
-
-### Production Kubernetes
-Update image references in k8s manifests and apply:
-```bash
-kubectl apply -f k8s/
-```
-
-## CI/CD Pipeline
-
-The GitHub Actions workflow includes:
-- Code testing and linting
-- Docker image building
-- Container registry push
-- Automated deployment to dev/prod environments
-
-### Triggers
-- Push to `main`: Production deployment
-- Push to `develop`: Development deployment
-- Pull requests: Testing only
-
 ## Monitoring
 
-### Kafka Monitoring
-- Topic metrics
-- Consumer lag
-- Throughput statistics
-
-### Application Monitoring
-- Event processing rates
-- Error rates and retry counts
-- Resource utilization
-
-## Scaling
-
-### Horizontal Scaling
-- Multiple Kafka brokers
-- Consumer group scaling
-- Spark executor scaling
-
-### Vertical Scaling
-- Resource limits in Kubernetes
-- JVM heap sizing for Spark
-- Memory allocation optimization
+Access Confluent Control Center at http://localhost:9021 for:
+- Topic management
+- Consumer group monitoring
+- Schema Registry management
+- Cluster health metrics
 
 ## Troubleshooting
 
@@ -198,21 +132,18 @@ The GitHub Actions workflow includes:
 
 1. **Kafka Connection Issues**
    ```bash
-   kubectl logs -n kafka deployment/kafka
-   kubectl port-forward svc/kafka-service 9092:9092 -n kafka
+   docker-compose logs broker
    ```
 
-2. **Consumer Lag**
+2. **Schema Registry Issues**
    ```bash
-   # Check consumer group status
-   kubectl exec -it kafka-pod -n kafka -- kafka-consumer-groups.sh \
-     --bootstrap-server localhost:9092 --describe --group ecommerce-processors
+   docker-compose logs schema-registry
    ```
 
-3. **Dashboard Not Loading**
+3. **Producer/Consumer Issues**
    ```bash
-   kubectl logs -n kafka deployment/dashboard
-   kubectl port-forward svc/dashboard-service 8501:8501 -n kafka
+   docker-compose logs producer
+   docker-compose logs consumer
    ```
 
 ## Contributing

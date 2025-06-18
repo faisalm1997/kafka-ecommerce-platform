@@ -36,7 +36,7 @@ def main():
             )
             producer.poll(0)
             time.sleep(1)  # Add delay between messages
-            
+
     except KeyboardInterrupt:
         logger.info("Stopping producer...")
     except Exception as e:
@@ -45,6 +45,8 @@ def main():
         logger.info("Flushing producer...")
         producer.flush(timeout=10)
         logger.info("Producer closed successfully")
+
+    print(f"Produced message: {json.dumps(order, indent=2)}")
 
 if __name__ == "__main__":
     main()

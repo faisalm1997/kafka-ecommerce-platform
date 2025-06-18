@@ -17,7 +17,7 @@ processor:
 	python src/spark_processor.py
 
 dashboard:
-	streamlit run src/dashboard.py
+	streamlit run src/streamlit_dashboard.py
 
 clean:
 	docker-compose down -v

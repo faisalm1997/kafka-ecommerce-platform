@@ -9,7 +9,7 @@ from kafka import KafkaConsumer
 from kafka.errors import KafkaTimeoutError
 import threading
 from collections import deque
-from config import config
+from config import KAFKA_CONFIG, TOPIC_NAME
 
 # Configure Streamlit 
 st.set_page_config(
@@ -30,8 +30,8 @@ class DashboardDataCollector:
         if not self.running:
             self.running = True
             self.consumer = KafkaConsumer(
-                config.kafka.topic_name,
-                bootstrap_servers=config.kafka.bootstrap_servers,
+                TOPIC_NAME,
+                bootstrap_servers=KAFKA_CONFIG['bootstrap.servers'],
                 group_id='dashboard-consumer',
                 value_deserializer=lambda m: json.loads(m.decode('utf-8')),
                 auto_offset_reset='latest',

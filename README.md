@@ -166,7 +166,6 @@ To view messages in a topic:
 ```bash
 docker exec -it broker kafka-console-consumer --bootstrap-server localhost:9092 --topic ecommerce-events --from-beginning
 ```
-
 ---
 
 ## Troubleshooting

@@ -1,11 +1,10 @@
 # Kafka Ecommerce Analytics Platform
 
-A comprehensive real-time ecommerce analytics platform built with Confluent Kafka, running locally with Docker Compose.
+A comprehensive real-time ecommerce analytics platform built with Confluent Kafka, running locally with Docker Compose and visualising data using streamlit.
 
 ## Architecture
 
 - **Confluent Kafka**: Message streaming platform
-- **Schema Registry**: Schema management and evolution
 - **Producer**: Generates mock ecommerce events
 - **Consumer**: Processes individual events
 - **Spark Processor**: Real-time stream processing and analytics
@@ -39,13 +38,12 @@ A comprehensive real-time ecommerce analytics platform built with Confluent Kafk
 
 2. **Start the platform**
    ```bash
-   make up-build
+   make up
    ```
 
 3. **Access services**
    - Control Center: http://localhost:9021
    - Dashboard: http://localhost:8501
-   - Schema Registry: http://localhost:8081
 
 ### Component Status
 ```bash
@@ -86,65 +84,97 @@ make logs
 ## Configuration
 
 ### Environment Variables
+
 ```bash
+# For local development (outside Docker)
+KAFKA_BOOTSTRAP_SERVERS=localhost:9092
+KAFKA_TOPIC=ecommerce-events
+
+# For Docker containers (set in docker-compose.yml)
 KAFKA_BOOTSTRAP_SERVERS=broker:29092
-SCHEMA_REGISTRY_URL=http://schema-registry:8081
 KAFKA_TOPIC=ecommerce-events
 ```
+
+---
+
+## Python Virtual Environment Setup
+
+It is recommended to use a Python virtual environment for local development:
+
+```bash
+# Create and activate a virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+---
 
 ## Development
 
 ### Local Development
+
 ```bash
-# Start all services
+
+# Build docker images for kafka producer and kafka consumer (if you haven't already)
+make build
+
+# Start all services (Kafka broker, producer, consumer)
 make up
 
-# Rebuild and start
-make up-build
+# Run the spark processor
+make processor
+
+# Run the streamlit dashboard
+make dashboard 
 
 # View logs
 make logs
 
 # Stop services
 make down
+
+# Clean the setup 
+make clean
+
 ```
 
-### Testing
+### Running Producer and Consumer Locally
+
 ```bash
-# Run tests
-pytest tests/
+# In one terminal
+python src/kafka_producer.py
 
-# Linting
-flake8 src/
+# In another terminal
+python src/kafka_consumer.py
 ```
+
+---
 
 ## Monitoring
 
-Access Confluent Control Center at http://localhost:9021 for:
-- Topic management
-- Consumer group monitoring
-- Schema Registry management
-- Cluster health metrics
+To list Kafka topics:
+
+```bash
+docker exec broker kafka-topics --bootstrap-server localhost:9092 --list
+```
+
+To view messages in a topic:
+
+```bash
+docker exec -it broker kafka-console-consumer --bootstrap-server localhost:9092 --topic ecommerce-events --from-beginning
+```
+
+---
 
 ## Troubleshooting
 
-### Common Issues
+- If you see errors about replication factor or internal topics, you can ignore them for single-broker local development.
+- Ensure your Python scripts use `localhost:9092` when running outside Docker, and `broker:29092` when running inside Docker containers.
 
-1. **Kafka Connection Issues**
-   ```bash
-   docker-compose logs broker
-   ```
-
-2. **Schema Registry Issues**
-   ```bash
-   docker-compose logs schema-registry
-   ```
-
-3. **Producer/Consumer Issues**
-   ```bash
-   docker-compose logs producer
-   docker-compose logs consumer
-   ```
+---
 
 ## Contributing
 

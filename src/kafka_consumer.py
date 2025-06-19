@@ -9,7 +9,7 @@ from config import KAFKA_CONFIG, TOPIC_NAME
 S3_BUCKET_NAME = 'confluent-kafka-ecommerce-data'
 S3_PREFIX = 'kafka-consumer-logs/'
 
-s3_client = boto3.client("s3", verify="/etc/ssl/certs/ca-certificates.crt")
+s3_client = boto3.client("s3")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.9-slim-buster
 
 WORKDIR /app
 
@@ -6,14 +6,17 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip setuptools
+# RUN pip install --upgrade pip setuptools
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
+# RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
+
+RUN pip3 install -r requirements.txt --trusted-host pypi.org --trusted-host files.pythonhosted.org
 
 COPY src/ /app/src/
 COPY src/config.py .
 
-ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+RUN pip install certifi
+ENV SSL_CERT_FILE=/usr/local/lib/python3.9/site-packages/certifi/cacert.pem
 
 CMD ["python", "src/kafka_consumer.py"]

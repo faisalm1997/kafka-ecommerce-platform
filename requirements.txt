@@ -76,7 +76,6 @@ python-dotenv
 pytz
 pyzmq
 referencing
-requests
 rpds-py
 s3fs
 s3transfer
@@ -92,7 +91,6 @@ tornado
 traitlets
 typing_extensions
 tzdata
-urllib3
 wcwidth
 webencodings
 wrapt

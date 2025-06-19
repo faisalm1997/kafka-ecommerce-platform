@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.9-slim
 
 WORKDIR /app
 
@@ -6,10 +6,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-# RUN pip install --upgrade pip setuptools
-
 COPY requirements.txt .
-# RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
 
 RUN pip3 install -r requirements.txt --trusted-host pypi.org --trusted-host files.pythonhosted.org
 

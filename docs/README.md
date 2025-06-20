@@ -2,7 +2,11 @@
 
 A comprehensive real-time ecommerce analytics platform built with Confluent Kafka, running locally with Docker Compose and visualising data using streamlit.
 
-## Architecture
+## Architecture Diagram 
+
+![Kafka Ecommerce Platform Architecture](../docs/architecture.png)
+
+## Architecture Components
 
 - **Confluent Kafka**: Message streaming platform
 - **Producer**: Generates mock ecommerce events
@@ -49,14 +53,15 @@ A comprehensive real-time ecommerce analytics platform built with Confluent Kafk
    - Dashboard: http://localhost:8501
 
 ### Component Status
+   1. Check all services
+      ```bash
+      docker-compose ps -a
+      ```
 
-```bash
-# Check all services
-docker-compose ps
-
-# View logs
-make logs
-```
+   2. View logs
+      ```bash
+      make logs
+      ```
 
 ## Components
 
@@ -126,7 +131,6 @@ pip install -r requirements.txt
 ### Local Development
 
 ```bash
-
 # Build docker images for kafka producer and kafka consumer (if you haven't already)
 make build
 
@@ -164,17 +168,17 @@ python src/kafka_consumer.py
 
 ## Monitoring
 
-To list Kafka topics:
+1. To list Kafka topics:
 
-```bash
-docker exec broker kafka-topics --bootstrap-server localhost:9092 --list
-```
+   ```bash
+   docker exec broker kafka-topics --bootstrap-server localhost:9092 --list
+   ```
 
-To view messages in a topic:
+2. To view messages in a topic:
 
-```bash
-docker exec -it broker kafka-console-consumer --bootstrap-server localhost:9092 --topic ecommerce-events --from-beginning
-```
+   ```bash
+   docker exec -it broker kafka-console-consumer --bootstrap-server localhost:9092 --topic ecommerce-events --from-beginning
+   ```
 ---
 
 ## Troubleshooting
@@ -186,36 +190,28 @@ docker exec -it broker kafka-console-consumer --bootstrap-server localhost:9092 
 
 1. Exec into the container
 
-```bash
- docker exec -it ecommerce-consumer bash
- ```
+   ```bash
+   docker exec -it ecommerce-consumer bash
+   ```
 
 2. Users are able to run the aws cli and check they are able to connect to aws and list their buckets from within the docker container
 
- ```bash
- apt-get update && apt-get install -y awscli
- ```
+   ```bash
+   apt-get update && apt-get install -y awscli
+   ```
 
 3. Test the connection to AWS
 
- ```bash
-aws sts get-caller-identity
-```
+   a. Using AWS cli 
+   ```bash
+   aws sts get-caller-identity
+   ```
 
-or with boto3
+   b. or with boto3
 
-```bash
-python -c "import boto3; print(boto3.client('sts').get_caller_identity())"
-```
-
-### Testing S3 Access with boto3
-
-To quickly test S3 access from inside your consumer container:
-
-```bash
-python -c "import boto3, os; s3 = boto3.client('s3'); s3.put_object(Bucket=os.environ['BUCKET_NAME'], Key='test.txt', Body=b'hello world')"
-```
-
+   ```bash
+   python -c "import boto3, os; s3 = boto3.client('s3'); s3.put_object(Bucket=os.environ['BUCKET_NAME'], Key='test.txt', Body=b'hello world')"
+   ```
 ---
 
 ## Contributing

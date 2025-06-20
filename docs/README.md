@@ -4,6 +4,8 @@ A comprehensive real-time ecommerce analytics platform built with Confluent Kafk
 
 ## Architecture Diagram 
 
+Created using eraser.io: https://www.eraser.io/git-diagrammer
+
 ![Kafka Ecommerce Platform Architecture](../docs/architecture.png)
 
 ## Architecture Components
@@ -14,6 +16,31 @@ A comprehensive real-time ecommerce analytics platform built with Confluent Kafk
 - **Spark Processor**: Real-time stream processing and analytics
 - **Dashboard**: Streamlit-based real-time visualization
 - **Control Center**: Confluent's management interface
+
+## Project Structure
+```bash
+kafka-ecommerce-platform/
+├── docker-compose.yml              # Docker Compose configuration for all services
+├── Makefile                        # MakeFile for project orchestration
+├── requirements.txt                # Python dependencies
+├── .env                            # Environment variables for development
+├── .gitignore                      
+├── docs/
+│   ├── README.md                   # Project README
+│   └── architecture.png            # Architecture diagram
+├── src/
+│   ├── config.py                   # Shared configuration
+│   ├── kafka_producer.py           # Kafka producer script
+│   ├── kafka_consumer.py           # Kafka consumer script
+│   ├── spark_processor.py          # Spark batch processor script
+│   ├── dashboard.py                # Streamlit dashboard app
+│   └── ...                         # Other source files
+├── docker/
+│   ├── Dockerfile.producer         # Dockerfile for producer
+│   └── Dockerfile.consumer         # Dockerfile for consumer
+├── kafka-connect-jars/             # Custom Kafka Connect plugins
+└── venv                            # You will need to create this venv
+```
 
 ## Features
 
@@ -51,6 +78,25 @@ A comprehensive real-time ecommerce analytics platform built with Confluent Kafk
 3. **Access services**
    - Control Center: http://localhost:9021
    - Dashboard: http://localhost:8501
+
+### .env file setup 
+
+```bash
+# AWS credentials for S3 access (required for consumer, spark, etc.)
+AWS_ACCESS_KEY_ID=your-aws-access-key-id
+AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
+AWS_REGION=your-aws-region
+
+# Kafka settings
+KAFKA_BOOTSTRAP_SERVERS=broker:29092
+KAFKA_TOPIC= <topic_name>
+
+# S3 bucket name (if referenced in your code)
+S3_BUCKET_NAME= <your_bucket_name>
+
+# (Optional)
+LOG_LEVEL=INFO
+```
 
 ### Component Status
    1. Check all services

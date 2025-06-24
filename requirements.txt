@@ -8,6 +8,7 @@ appnope
 asttokens
 async-timeout
 attrs
+awscli
 backcall
 beautifulsoup4
 bleach
@@ -18,10 +19,12 @@ cachetools
 certifi
 charset-normalizer
 click
+colorama
 confluent-kafka
 decorator
 defusedxml
 docopt
+docutils
 executing
 Faker
 fastjsonschema
@@ -58,6 +61,7 @@ parso
 pexpect
 pickleshare
 pillow
+pip-system-certs
 pipreqs
 platformdirs
 plotly
@@ -68,15 +72,20 @@ ptyprocess
 pure_eval
 py4j
 pyarrow
+pyasn1
+pycountry
 pydeck
 Pygments
 pyspark==3.4.0
 python-dateutil
 python-dotenv
 pytz
+PyYAML
 pyzmq
 referencing
+requests
 rpds-py
+rsa
 s3fs
 s3transfer
 six
@@ -91,6 +100,7 @@ tornado
 traitlets
 typing_extensions
 tzdata
+urllib3
 wcwidth
 webencodings
 wrapt

@@ -210,6 +210,16 @@ python src/kafka_producer.py
 python src/kafka_consumer.py
 ```
 
+### Run Spark Processor 
+
+Other than using the makefile to run the spark processor, users are also able to use the command-line arguments to run the spark processor:
+
+```bash 
+
+spark-submit spark_processor.py --bucket your-bucket --input-prefix kafka-consumer-logs --output-folder kafka-consumer-logs-output
+
+```
+
 ---
 
 ## Monitoring

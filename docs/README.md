@@ -44,10 +44,9 @@ kafka-ecommerce-platform/
 
 ## Features
 
-- Real-time ecommerce event generation (orders, page views, cart actions)
+- Ecommerce event generation (orders, page views, cart actions)
 - Stream processing with Apache Spark
-- Interactive dashboard with live metrics
-- Schema management with Schema Registry
+- Dashboard with visualisation
 - Docker containerization
 - Configuration management
 - Confluent Control Center monitoring
@@ -137,9 +136,12 @@ LOG_LEVEL=INFO
 
 ### Dashboard
 
-- Real-time metrics visualization
 - Interactive charts and graphs
 - Auto-refresh capability
+- Users are able to download the data which is showcased on the dashboard as a .csv 
+
+#### Dashboard Example 
+![Streamlit Dashboard Example](./dashboard_screenshot.png)
 
 ## Configuration
 
